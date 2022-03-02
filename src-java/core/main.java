@@ -1,6 +1,7 @@
 package core;
 
 import AI.BFS;
+import AI.IDS;
 import model.Board;
 import model.Cell;
 import model.Node;
@@ -31,5 +32,7 @@ public class main {
         Node start = new Node(Cell.getStart(), Cell.getStart().getValue(), Cell.getGoal().getValue(), gameBoard, null, initHash);
         BFS bfs = new BFS();
         bfs.search(start);
+        IDS ids = new IDS();
+        ids.search(start);
     }
 }
