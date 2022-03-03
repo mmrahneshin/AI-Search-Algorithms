@@ -19,6 +19,19 @@ public class Cell {
         if (this.operationType == OPERATION_TYPE.START) start = this;
     }
 
+    public Cell copy() {
+        Cell copyCell = new Cell(this.i, this.j, this.value, this.op);
+        return copyCell;
+    }
+
+    public int getRow() {
+        return i;
+    }
+
+    public int getCol() {
+        return j;
+    }
+
     public int getValue() {
         return value;
     }

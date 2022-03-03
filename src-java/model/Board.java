@@ -14,6 +14,17 @@ public class Board {
 
     }
 
+    public Board copy() {
+        Cell[][] copyCells = new Cell[row][col]; 
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                copyCells[i][j] = cells[i][j].copy();
+            }
+        }
+        Board copyBoard = new Board(this.row, this.col, copyCells);
+        return copyBoard;
+    }
+
     public int getCol() {
         return col;
     }

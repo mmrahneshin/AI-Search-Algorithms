@@ -27,6 +27,17 @@ public class Node {
         setGoalValue();
     }
 
+    public Node copy() {
+        Node copyNode = new Node(this.currentCell.getStart().copy(), this.currentCell.getStart().copy().getValue(), this.currentCell.getStart().copy().getValue(), this.board.copy(), null, copyHash(repeatedStates));
+        return copyNode;
+    }
+
+    public Hashtable<String, Boolean> copyHash(Hashtable<String, Boolean> repeated) {
+        Hashtable<String, Boolean> copyHash = new Hashtable<String, Boolean>(repeated);
+        copyHash.put(this.toString(), true);
+        return copyHash;
+    }
+
 
     public ArrayList<Node> successor() {
         ArrayList<Node> result = new ArrayList<Node>();

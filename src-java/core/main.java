@@ -1,5 +1,6 @@
 package core;
 
+import AI.BDS;
 import AI.BFS;
 import AI.IDS;
 import model.Board;
@@ -34,5 +35,7 @@ public class main {
         bfs.search(start);
         IDS ids = new IDS();
         ids.search(start);
+        BDS bds = new BDS();
+        bds.search(start);
     }
 }
