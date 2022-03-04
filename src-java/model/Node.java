@@ -28,7 +28,11 @@ public class Node {
     }
 
     public Node copy() {
-        Node copyNode = new Node(this.currentCell.getStart().copy(), this.currentCell.getStart().copy().getValue(), this.currentCell.getStart().copy().getValue(), this.board.copy(), null, copyHash(repeatedStates));
+        Node copyParent = null;
+        if (this.parent != null) {
+            copyParent = this.parent.copy();
+        }
+        Node copyNode = new Node(this.currentCell, this.currentCell.getValue(), this.currentCell.getGoal().getValue(), this.board.copy(), copyParent, copyHash(repeatedStates));
         return copyNode;
     }
 
