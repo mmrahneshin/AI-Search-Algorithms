@@ -38,7 +38,6 @@ public class Node {
         return copyHash;
     }
 
-
     public ArrayList<Node> successor() {
         ArrayList<Node> result = new ArrayList<Node>();
         if (canMoveRight()) {
@@ -93,6 +92,17 @@ public class Node {
             case POW -> (int) Math.pow(sum, cell.getValue());
             case MULT -> sum * cell.getValue();
             default -> sum;
+        };
+
+    }
+
+    public int customCalculate(Cell cell, int custom) {
+        return switch (cell.getOperationType()) {
+            case MINUS -> custom - cell.getValue();
+            case ADD -> custom + cell.getValue();
+            case POW -> (int) Math.pow(custom, cell.getValue());
+            case MULT -> custom * cell.getValue();
+            default -> custom;
         };
 
     }
