@@ -47,7 +47,6 @@ public class BDS {
         backwardVisitedHash.put(backward.hash(), backward);
         backwardVisited.put(backward.toString(), backward);
 
-
         while(!forwardQueue.isEmpty() && !backwardQueue.isEmpty()){
             bfs(forwardQueue, forwardVisited, forwardVisitedHash);
             // System.out.println("sdfsd");
@@ -57,8 +56,9 @@ public class BDS {
             // interNode = interSection(forwardVisited, backwardVisited);
             // }
             Node[] interNode = interSection(forwardVisited, backwardVisited);
-
             if (interNode != null) {
+                // System.out.println(forwardVisitedHash);
+                // System.out.println(backwardVisitedHash);
                 printResult(interNode[1], 0);
                 printResult(interNode[0], 0);
                 System.out.println(target);
@@ -69,7 +69,6 @@ public class BDS {
 
     private static void bfs(Queue<Node> queue, Hashtable<String, Node> visited, Hashtable<String, Node> visitedHash) {
         Node current = queue.poll();
-        // visited.clear();
         ArrayList<Node> children = current.successor();
         for(Node child:children){
             if (!visitedHash.containsKey(child.hash())) {
@@ -82,6 +81,8 @@ public class BDS {
 
     private static Node[] interSection(Hashtable<String, Node> fVisited, Hashtable<String, Node> bVisited) {
         Node[] arr = new Node[2];
+        Hashtable<String, Node> removeHash = new Hashtable<>();
+
         for (Entry<String, Node> node: fVisited.entrySet()){
             if (bVisited.containsKey(node.getKey())) {
 
@@ -90,27 +91,51 @@ public class BDS {
                 // System.out.println(arr[1]);
                 // boolean conflict = subscription(arr[0].copy(), arr[1].parent.copy());
                 // System.out.println(conflict);
-                if (checkGoal(arr[0].copy())) {
-                    target = check(arr[0].sum, arr[1].parent);
-                    if (target >= node.getValue().currentCell.getGoal().getValue() ) {
-                        return arr; 
-                    }
+                if (arr[1].parent != null) {
+                    if (checkGoal(node.getValue().copy(), bVisited.get(node.getKey()).parent.copy())) {
+                        target = check(arr[0].sum, arr[1].parent);
+                        if (target >= node.getValue().currentCell.getGoal().getValue() ) {
+                            for(Entry<String, Node> temp: removeHash.entrySet()){
+                                fVisited.remove(temp.getKey());
+                                bVisited.remove(temp.getKey());
+                            }
+                            return arr; 
+                        }
+                    }else{
+                       removeHash.put(node.getKey(), node.getValue());
+                    } 
                 }
             }
+        }
+        for(Entry<String, Node> temp: removeHash.entrySet()){
+            fVisited.remove(temp.getKey());
+            bVisited.remove(temp.getKey());
         }
         return null;
     }
 
-    private static boolean checkGoal(Node start) {
+    private static boolean checkGoal(Node start, Node goal) {
+        // System.out.println(start);
+        // System.out.println(goal);
+        Hashtable<String, Node> goalVisited = new Hashtable<>();
+        Hashtable<String, Node> startVisited = new Hashtable<>();
+
         while(start != null){
-            if (start.currentCell.toString().equals(start.currentCell.getGoal().toString())) {
-                // System.out.println("ss");
-                return false;
-            }
-            // System.out.println(start);
-            // System.out.println(start.currentCell.getGoal());
+            startVisited.put(start.toString(), start);
             start = start.parent;
         }
+        while (goal != null) {
+            goalVisited.put(goal.toString(), goal);
+            goal = goal.parent;
+        }
+        for(Entry<String, Node> node: startVisited.entrySet()){
+            if (goalVisited.containsKey(node.getKey())) {
+                return false;
+            }
+        }
+        // System.out.println(goalVisited);
+        // System.out.println(startVisited);
+        // System.out.println("------------------------------------------------------------");
         return true;
     }
 
