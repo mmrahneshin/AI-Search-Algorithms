@@ -9,6 +9,7 @@ import model.Node;
 
 import java.util.Hashtable;
 import java.util.Scanner;
+import model.ACTION_TYPE;
 
 public class main {
 
@@ -29,8 +30,8 @@ public class main {
         Cell[][] cells = mapper.createCells(board, rows, columns);
         Board gameBoard = mapper.createBoard(cells, rows, columns);
         Hashtable<String, Boolean> initHash = new Hashtable<>();
-        initHash.put(Cell.getStart().toString(), true);
-        Node start = new Node(Cell.getStart(), Cell.getStart().getValue(), Cell.getGoal().getValue(), gameBoard, null, initHash);
+        initHash.put(gameBoard.getStart().toString(), true);
+        Node start = new Node(gameBoard.getStart(), gameBoard.getStart().getValue(), gameBoard.getGoal().getValue(), gameBoard, null, initHash, ACTION_TYPE.RIGHT);
         BFS bfs = new BFS();
         bfs.search(start);
         IDS ids = new IDS();

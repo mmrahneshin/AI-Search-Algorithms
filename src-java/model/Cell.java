@@ -6,8 +6,6 @@ public class Cell {
     private int value;
     private OPERATION_TYPE operationType;
     public String op;
-    private static Cell start;
-    private static Cell goal;
 
     public Cell(int i, int j, int value, String op) {
         this.i = i;
@@ -15,8 +13,7 @@ public class Cell {
         this.op = op;
         this.value = value;
         this.operationType = OPERATION_TYPE.getOperation(op);
-        if (this.operationType == OPERATION_TYPE.GOAL) goal = this;
-        if (this.operationType == OPERATION_TYPE.START) start = this;
+        
     }
 
     public Cell copy() {
@@ -36,16 +33,8 @@ public class Cell {
         return value;
     }
 
-    public static Cell getGoal() {
-        return goal;
-    }
-
-    public static Cell getStart() {
-        return start;
-    }
-
     public OPERATION_TYPE getOperationType() {
-        return operationType;
+        return this.operationType;
     }
 
     @Override

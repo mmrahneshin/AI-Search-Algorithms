@@ -49,7 +49,6 @@ public class BFS {
         }
 
         System.out.println(node.toString());
-        // node.drawState();
         printResult(node.parent, depthCounter + 1);
     }
 

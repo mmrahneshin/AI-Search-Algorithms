@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Map.Entry;
 
+import model.ACTION_TYPE;
 import model.Board;
 import model.Cell;
 import model.Node;
@@ -25,8 +26,9 @@ public class BDS {
     static Queue<Node> backwardQueue = new LinkedList<Node>();
 
     public void search(Node forward) {
-        Cell startBackward = new Cell(forward.currentCell.getGoal().getRow(), forward.currentCell.getGoal().getCol(), forward.currentCell.getValue(), forward.currentCell.op);
-        Cell goalBackward = new Cell(forward.currentCell.getRow(), forward.currentCell.getCol(), forward.currentCell.getGoal().getValue(), forward.currentCell.getGoal().op);
+
+        Cell startBackward = new Cell(forward.board.getGoal().getRow(), forward.board.getGoal().getCol(), forward.currentCell.getValue(), forward.currentCell.op);
+        Cell goalBackward = new Cell(forward.currentCell.getRow(), forward.currentCell.getCol(), forward.board.getGoal().getValue(), forward.board.getGoal().op);
         Cell[][] cells = forward.board.copy().getCells();
 
         cells[startBackward.getRow()][startBackward.getCol()] = startBackward;
@@ -37,7 +39,7 @@ public class BDS {
         Hashtable<String, Boolean> backwardHash = new Hashtable<>();
         backwardHash.put(startBackward.toString(), true);
 
-        Node backward = new Node(startBackward, startBackward.getValue(), goalBackward.getValue(), backwardBoard, null, backwardHash);
+        Node backward = new Node(startBackward, startBackward.getValue(), goalBackward.getValue(), backwardBoard, null, backwardHash, ACTION_TYPE.RIGHT);
 
         forwardQueue.add(forward);
         forwardVisitedHash.put(forward.hash(), forward);
@@ -50,14 +52,11 @@ public class BDS {
 
         while(!forwardQueue.isEmpty() && !backwardQueue.isEmpty()){
             bfs(forwardQueue, forwardVisited, forwardVisitedHash);
-            // System.out.println("sdfsd");
-            // Node[] interNode = interSection(forwardVisited, backwardVisited);
-            bfs(backwardQueue, backwardVisited, backwardVisitedHash);
-            // if (interNode == null) {
-            // interNode = interSection(forwardVisited, backwardVisited);
-            // }
-            Node[] interNode = interSection(forwardVisited, backwardVisited);
 
+            bfs(backwardQueue, backwardVisited, backwardVisitedHash);
+
+            Node[] interNode = interSection(forwardVisited, backwardVisited);
+           
             if (interNode != null) {
                 printResult(interNode[1], 0);
                 printResult(interNode[0], 0);
@@ -68,14 +67,20 @@ public class BDS {
     }
 
     private static void bfs(Queue<Node> queue, Hashtable<String, Node> visited, Hashtable<String, Node> visitedHash) {
-        Node current = queue.poll();
-        // visited.clear();
-        ArrayList<Node> children = current.successor();
-        for(Node child:children){
-            if (!visitedHash.containsKey(child.hash())) {
-                queue.add(child);
-                visitedHash.put(child.hash(), child);
-                visited.put(child.toString(), child); 
+        Queue<Node> tempQueue = new LinkedList<Node>();
+        while(!queue.isEmpty()){
+            Node current = queue.poll();
+            tempQueue.add(current);
+        }
+
+        while (!tempQueue.isEmpty()) {
+            ArrayList<Node> children = tempQueue.poll().successor();
+            for(Node child:children){
+                if (!visitedHash.containsKey(child.hash())) {
+                    queue.add(child);
+                    visitedHash.put(child.hash(), child);
+                    visited.put(child.toString(), child); 
+                }
             }
         }
     }
@@ -87,12 +92,10 @@ public class BDS {
 
                 arr[1] = bVisited.get(node.getKey());
                 arr[0] = node.getValue();
-                // System.out.println(arr[1]);
-                // boolean conflict = subscription(arr[0].copy(), arr[1].parent.copy());
-                // System.out.println(conflict);
-                if (checkGoal(arr[0].copy())) {
+
+                if (checkConflict(arr[0].copy(), arr[1].copy().parent)) {
                     target = check(arr[0].sum, arr[1].parent);
-                    if (target >= node.getValue().currentCell.getGoal().getValue() ) {
+                    if (target >= node.getValue().board.getGoal().getValue() ) {
                         return arr; 
                     }
                 }
@@ -101,25 +104,36 @@ public class BDS {
         return null;
     }
 
-    private static boolean checkGoal(Node start) {
+    private static boolean checkConflict(Node start,Node goal) {
+        
+    Hashtable<String, Node> startVisited = new Hashtable<>();
+    Hashtable<String, Node> goalVisited = new Hashtable<>();
         while(start != null){
-            if (start.currentCell.toString().equals(start.currentCell.getGoal().toString())) {
-                // System.out.println("ss");
+            startVisited.put(start.currentCell.toString(), start);
+            start = start.parent;
+        }
+        while(goal != null){
+            goalVisited.put(goal.currentCell.toString(), goal);
+            goal = goal.parent;
+        }
+        for(Entry<String, Node> node: startVisited.entrySet()){
+            if (goalVisited.containsKey(node.getKey())) {
                 return false;
             }
-            // System.out.println(start);
-            // System.out.println(start.currentCell.getGoal());
-            start = start.parent;
         }
         return true;
     }
 
     private static int check(int sum, Node node) {
-        if (node.parent == null) {
-            return sum;
+        if (node !=null) {
+            if (node.parent == null) {
+                return sum;
+            }
+            sum = check(node.customCalculate(node.currentCell, sum), node.parent);
         }
-        sum = check(node.customCalculate(node.currentCell, sum), node.parent);
         return sum;
+       
+        
     }
 
     private void printResult(Node node, int depthCounter) {
@@ -129,17 +143,14 @@ public class BDS {
         }else if(node.parent == null && print == false){
             print = true;
             System.out.println(node.toString());
-            // node.drawState();
             return;
         }
         if (print) {
             System.out.println(node.toString());
-            // node.drawState();
             printResult(node.parent, depthCounter + 1);
         } else {
             printResult(node.parent, depthCounter + 1);
             System.out.println(node.toString());
-            // node.drawState();
         }
     }
 }
