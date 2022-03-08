@@ -3,6 +3,7 @@ package core;
 import AI.ASTAR;
 import AI.BDS;
 import AI.BFS;
+import AI.IDASTAR;
 import AI.IDS;
 import model.Board;
 import model.Cell;
@@ -41,5 +42,7 @@ public class main {
         bds.search(start);
         ASTAR astar = new ASTAR();
         astar.search(start);
+        IDASTAR idastar = new IDASTAR();
+        idastar.search(start);
     }
 }

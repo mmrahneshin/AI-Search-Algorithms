@@ -49,7 +49,7 @@ public class ASTAR {
         int min = Integer.MAX_VALUE;
         Node minNode = null;
         for(java.util.Map.Entry<String, Node> node : inFrontier.entrySet()){
-            if (node.getValue().FN <= min) {
+            if (node.getValue().FN < min) {
                 minNode = node.getValue();
                 min = node.getValue().FN;
             }

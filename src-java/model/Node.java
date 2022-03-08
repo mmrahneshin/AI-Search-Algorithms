@@ -12,7 +12,7 @@ public class Node {
     public int sum = 0;
     public Node parent;
     public int GN = 0;
-    public int FN = 0;
+    public int FN;
     public Cell currentCell;
     private Cell[][] cells;
     private int goalValue;
