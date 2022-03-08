@@ -19,8 +19,8 @@ public class BDS {
     static Hashtable<String, Node> forwardVisited = new Hashtable<>();
     static Hashtable<String, Node> backwardVisited = new Hashtable<>();
 
-    static Hashtable<String, Node> backwardVisitedHash = new Hashtable<>();
-    static Hashtable<String, Node> forwardVisitedHash = new Hashtable<>();
+    static Hashtable<Node, Node> backwardVisitedHash = new Hashtable<>();
+    static Hashtable<Node, Node> forwardVisitedHash = new Hashtable<>();
     
     static Queue<Node> forwardQueue = new LinkedList<Node>();
     static Queue<Node> backwardQueue = new LinkedList<Node>();
@@ -42,11 +42,11 @@ public class BDS {
         Node backward = new Node(startBackward, startBackward.getValue(), goalBackward.getValue(), backwardBoard, null, backwardHash, ACTION_TYPE.RIGHT);
 
         forwardQueue.add(forward);
-        forwardVisitedHash.put(forward.hash(), forward);
+        forwardVisitedHash.put(forward, forward);
         forwardVisited.put(forward.toString(), forward);
         
         backwardQueue.add(backward);
-        backwardVisitedHash.put(backward.hash(), backward);
+        backwardVisitedHash.put(backward, backward);
         backwardVisited.put(backward.toString(), backward);
 
 
@@ -66,7 +66,7 @@ public class BDS {
         }
     }
 
-    private static void bfs(Queue<Node> queue, Hashtable<String, Node> visited, Hashtable<String, Node> visitedHash) {
+    private static void bfs(Queue<Node> queue, Hashtable<String, Node> visited, Hashtable<Node, Node> visitedHash) {
         Queue<Node> tempQueue = new LinkedList<Node>();
         while(!queue.isEmpty()){
             Node current = queue.poll();
@@ -76,9 +76,9 @@ public class BDS {
         while (!tempQueue.isEmpty()) {
             ArrayList<Node> children = tempQueue.poll().successor();
             for(Node child:children){
-                if (!visitedHash.containsKey(child.hash())) {
+                if (!visitedHash.containsKey(child)) {
                     queue.add(child);
-                    visitedHash.put(child.hash(), child);
+                    visitedHash.put(child, child);
                     visited.put(child.toString(), child); 
                 }
             }

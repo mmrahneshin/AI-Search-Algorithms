@@ -1,5 +1,6 @@
 package core;
 
+import AI.ASTAR;
 import AI.BDS;
 import AI.BFS;
 import AI.IDS;
@@ -38,5 +39,7 @@ public class main {
         ids.search(start);
         BDS bds = new BDS();
         bds.search(start);
+        ASTAR astar = new ASTAR();
+        astar.search(start);
     }
 }

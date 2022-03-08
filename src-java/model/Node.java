@@ -11,6 +11,8 @@ public class Node {
     public Board board;
     public int sum = 0;
     public Node parent;
+    public int GN = 0;
+    public int FN = 0;
     public Cell currentCell;
     private Cell[][] cells;
     private int goalValue;
@@ -39,12 +41,6 @@ public class Node {
         Node copyNode = new Node(this.currentCell, this.currentCell.getValue(), this.board.getGoal().getValue(), this.board.copy(), copyParent, repeatedStates, this.previousAction);
         return copyNode;
     }
-
-    // public Hashtable<String, Boolean> copyHash(Hashtable<String, Boolean> repeated) {
-    //     Hashtable<String, Boolean> copyHash = new Hashtable<String, Boolean>(repeated);
-    //     copyHash.put(this.toString(), true);
-    //     return copyHash;
-    // }
 
     public int customCalculate(Cell cell, int custom) {
         return switch (cell.getOperationType()) {
@@ -123,17 +119,18 @@ public class Node {
 
     public int pathCost() {
         return switch (currentCell.getOperationType()) {
-            case MINUS, DECREASE_GOAL -> 1;
-            case ADD, INCREASE_GOAL -> 2;
-            case MULT -> 3;
-            case POW -> 4;
-            default -> 0;
+            case MINUS, INCREASE_GOAL -> 1;
+            case ADD, DECREASE_GOAL -> 2;
+            case MULT -> 5;
+            case POW -> 11;
+            default -> 1;
         };
     }
 
-    public int heuristic() {
-        // TODO: 2/16/2022 implement heuristic function
-        return 0;
+    public int heuristic(Cell current) {
+        int result;
+        result = Math.abs(board.getGoal().getCol() - current.getCol()) + Math.abs(board.getGoal().getRow() - current.getRow());
+        return result;
     }
 
     public String hash() {
