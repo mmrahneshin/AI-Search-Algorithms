@@ -16,6 +16,7 @@ public class ASTAR {
             printResult(startNode, 0);
             return;
         }
+        startNode.FN = startNode.heuristic(startNode.currentCell);
         inFrontier.put(startNode.hash(), startNode);
 
         while (!inFrontier.isEmpty()) {
@@ -26,6 +27,13 @@ public class ASTAR {
             for (Node child : children) {
                 if (!(inFrontier.containsKey(child.hash())) && !(explored.containsKey(child.hash()))) {
                     if (child.isGoal()) {
+                        if (minFinder(inFrontier) == null) {
+                            child.GN = child.pathCost() + temp.GN;
+                            child.FN = child.heuristic(child.currentCell) + child.GN;
+                            printResult(child, 0);
+                            System.out.println(child.sum);
+                            return;
+                        }
                         if (child.FN <= minFinder(inFrontier).FN) {
                             child.GN = child.pathCost() + temp.GN;
                             child.FN = child.heuristic(child.currentCell) + child.GN;

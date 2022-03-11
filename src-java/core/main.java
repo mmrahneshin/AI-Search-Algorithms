@@ -33,16 +33,25 @@ public class main {
         Board gameBoard = mapper.createBoard(cells, rows, columns);
         Hashtable<String, Boolean> initHash = new Hashtable<>();
         initHash.put(gameBoard.getStart().toString(), true);
-        Node start = new Node(gameBoard.getStart(), gameBoard.getStart().getValue(), gameBoard.getGoal().getValue(), gameBoard, null, initHash, ACTION_TYPE.RIGHT);
+
+        Node startBFS = new Node(gameBoard.getStart(), gameBoard.getStart().getValue(), gameBoard.getGoal().getValue(), gameBoard, null, initHash, ACTION_TYPE.RIGHT);
         BFS bfs = new BFS();
-        bfs.search(start);
+        bfs.search(startBFS);
+
+        Node startIDS = new Node(gameBoard.getStart(), gameBoard.getStart().getValue(), gameBoard.getGoal().getValue(), gameBoard, null, initHash, ACTION_TYPE.RIGHT);
         IDS ids = new IDS();
-        ids.search(start);
+        ids.search(startIDS);
+
+        Node startBDS = new Node(gameBoard.getStart(), gameBoard.getStart().getValue(), gameBoard.getGoal().getValue(), gameBoard, null, initHash, ACTION_TYPE.RIGHT);
         BDS bds = new BDS();
-        bds.search(start);
+        bds.search(startBDS);
+
+        Node startASTAR = new Node(gameBoard.getStart(), gameBoard.getStart().getValue(), gameBoard.getGoal().getValue(), gameBoard, null, initHash, ACTION_TYPE.RIGHT);
         ASTAR astar = new ASTAR();
-        astar.search(start);
+        astar.search(startASTAR);
+
+        Node startIDA = new Node(gameBoard.getStart(), gameBoard.getStart().getValue(), gameBoard.getGoal().getValue(), gameBoard, null, initHash, ACTION_TYPE.RIGHT);
         IDASTAR idastar = new IDASTAR();
-        idastar.search(start);
+        idastar.search(startIDA);
     }
 }
