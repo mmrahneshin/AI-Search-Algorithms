@@ -80,7 +80,6 @@ public class BDS {
         Queue<Node> tempQueue = new LinkedList<Node>();
         while (!queue.isEmpty()) {
             Node current = queue.poll();
-            visitedHash.remove(current.hash());
             tempQueue.add(current);
         }
         while (!tempQueue.isEmpty()) {
